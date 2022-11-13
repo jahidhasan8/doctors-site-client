@@ -5,7 +5,9 @@ import bg from '../../../assets/images/bg.png'
 const Banner = () => {
     return (
         <div className="hero" style={{
-            background: `url(${bg})`
+            background: `url(${bg})`,
+            backgroundSize:'cover',
+            backgroundPosition:'center'
         }}>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <img src={chair} className='rounded-lg shadow-2xl lg:w-1/2' alt='' />
