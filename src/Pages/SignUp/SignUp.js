@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider';
 
 const SignUp = () => {
 
     const{register,handleSubmit,formState:{errors} }=useForm()
-
+    const{createUser}=useContext(AuthContext)
     const handleSignup=(data)=>{
       console.log(data);
+      createUser(data.email,data.password)
+      .then(result=>{
+        const user=result.user
+        console.log(user);
+        toast.success("user created successfully")
+      })
+      .catch(error=>toast.error(error.message))
     }
     return (
         <div className='h-[600px] flex justify-center items-center' >
@@ -34,9 +43,10 @@ const SignUp = () => {
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
                             <span className="label-text">Password</span>
-                        </label>
+                        </label> 
                         <input type="password" {...register("password",{required:"password is required",
-                         minLength:{value:6,message:"password should be 6 characters or long"}
+                         minLength:{value:6,message:"password should be 6 characters or long"},
+                         pattern:{value:/(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/,message:"password should be  uppercase number and special character"}
                     })} placeholder="Type here" className="input input-bordered w-full max-w-xs"  />
                         {errors.password && <p className='text-red-600'>{errors.password?.message}</p>}
                     </div>
