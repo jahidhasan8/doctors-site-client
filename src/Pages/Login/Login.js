@@ -1,4 +1,5 @@
 
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -8,7 +9,9 @@ import { AuthContext } from '../../contexts/AuthProvider';
 const Login = () => {
 
     const { register, formState: { errors }, handleSubmit } = useForm()
-    const{signIn}=useContext(AuthContext)
+    const{signIn,googleSignIn}=useContext(AuthContext)
+    const googleProvider = new GoogleAuthProvider();
+
     const[loginError,setLoginError]=useState('')
     const navigate=useNavigate()
     const location=useLocation()
@@ -27,7 +30,16 @@ const Login = () => {
            setLoginError(error.message)
         })
     }
-
+    
+    const handleGoogleSignIn=()=>{
+        googleSignIn(googleProvider)
+        .then(result=>{
+            const user=result.user 
+            console.log(user);
+            toast.success("google signIn successful")
+        })
+        .catch(error=>toast.error(error.message))
+    }
     return (
         <div className='h-[600px] flex justify-center items-center' >
             <div className='w-96 p-6'>
@@ -64,7 +76,7 @@ const Login = () => {
                 </form>
                 <p className='mt-4'>New to Doctors Portal? <Link className='text-secondary font-semibold' to='/signup'>Create new account</Link></p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline max-w-xs w-full'>Continue With Google</button>
+                <button onClick={handleGoogleSignIn} className='btn btn-outline max-w-xs w-full'>Continue With Google</button>
             </div>
         </div>
     );
